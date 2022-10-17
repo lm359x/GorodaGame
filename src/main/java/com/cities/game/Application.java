@@ -9,8 +9,6 @@ public class Application {
         Set<String> cities = DatabaseLoader.loadDatabase();
 
         GameHandler gameHandler = new GameHandler(cities, player1, player2);
-
-        Player winner = gameHandler.startTheGame();
-        System.out.println("Игра окончена! В данном раунде одержал(а) победу " + winner.getName());
+        gameHandler.startTheGame();
     }
 }

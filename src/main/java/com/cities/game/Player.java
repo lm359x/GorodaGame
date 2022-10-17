@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Player {
 
-    private final String name;
+    private String name;
     private final Scanner scanner = new Scanner(System.in);
 
     public Player(String name) {
@@ -17,5 +17,9 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

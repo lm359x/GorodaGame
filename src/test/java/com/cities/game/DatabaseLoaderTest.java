@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseLoaderTest {
 
-    DatabaseLoader databaseLoader = Mockito.mock(DatabaseLoader.class);
+    private final DatabaseLoader databaseLoader = Mockito.mock(DatabaseLoader.class);
 
     @Test
     void loadDatabase() {

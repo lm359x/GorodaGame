@@ -4,9 +4,18 @@ import java.util.Scanner;
 
 public class Player {
 
+    private final String name;
     private final Scanner scanner = new Scanner(System.in);
+
+    public Player(String name) {
+        this.name = name;
+    }
 
     String inputCity() {
         return scanner.nextLine();
+    }
+
+    public String getName() {
+        return name;
     }
 }

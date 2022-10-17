@@ -1,9 +1,25 @@
 package com.cities.game;
 
+import java.util.Scanner;
+
 public class Player {
 
-    String inputCity() {
+    private String name;
+    private final Scanner scanner = new Scanner(System.in);
 
-        return "";
+    public Player(String name) {
+        this.name = name;
+    }
+
+    String inputCity() {
+        return scanner.nextLine();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

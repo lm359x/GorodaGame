@@ -1,14 +1,13 @@
 package com.cities.game;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
 public class DatabaseLoader {
 
-    public Set<String> loadDatabase(File csvFile) {
+    public static Set<String> loadDatabase() {
 
         Set<String> cities = new HashSet<>();
         try (BufferedReader br = new BufferedReader(new FileReader("city.csv"))) {

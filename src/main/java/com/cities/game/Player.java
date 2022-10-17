@@ -1,9 +1,12 @@
 package com.cities.game;
 
+import java.util.Scanner;
+
 public class Player {
 
-    String inputCity() {
+    private final Scanner scanner = new Scanner(System.in);
 
-        return "";
+    String inputCity() {
+        return scanner.nextLine();
     }
 }

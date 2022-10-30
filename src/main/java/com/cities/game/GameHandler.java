@@ -16,7 +16,7 @@ public class GameHandler {
         this.cities = cities;
         this.player1 = player1;
         this.player2 = player2;
-        this.countdownTimer = new CountdownTimer(this);
+        this.countdownTimer = new CountdownTimer();
     }
 
     public boolean verifyCity(String city) {
@@ -47,31 +47,41 @@ public class GameHandler {
         }
 
         while(cities.size() > 0) {
-            handlePlayerAnswer(player1);
+            if (Objects.equals(handlePlayerAnswer(player1), false)) {
+                announceLoser(player1);
+                return;
+            }
             System.out.println("=====================================================================================");
-            handlePlayerAnswer(player2);
+            if (Objects.equals(handlePlayerAnswer(player2), false)) {
+                announceLoser(player2);
+                return;
+            }
             System.out.println("=====================================================================================");
         }
     }
 
-    private void handlePlayerAnswer(Player player) {
+    private boolean handlePlayerAnswer(Player player) {
         countdownTimer.startCountdown(player);
 
-        System.out.println(player.getName() + ": ");
-        String city = player.inputCity();
+        String city = "";
+
         while (!verifyCity(city)) {
             System.out.println(player.getName() + ": ");
             city = player.inputCity();
+
+            if (countdownTimer.isTimeOver()) {
+                return false;
+            }
         }
 
         countdownTimer.stopCountdown();
         this.lastCityEntered = city;
         removeCity(city);
+        return true;
     }
 
     public void announceLoser(Player player) {
         System.out.println("Время вышло! " + player.getName() + " проиграл(а)!");
-        System.exit(0);
     }
 
     public Set<String> getCities() {

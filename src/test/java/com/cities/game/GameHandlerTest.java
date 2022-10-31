@@ -13,15 +13,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameHandlerTest {
 
+    private final Set<String> cities = Stream.of("Москва", "Архангельск", "Калининград")
+            .collect(Collectors.toCollection(HashSet::new));
+    private final Player player1 = Mockito.spy(new Player("Player #1"));
+    private final Player player2 = Mockito.spy(new Player("Player #2"));
     private GameHandler gameHandler;
 
     @BeforeEach
     public void init() {
-        Set<String> cities = Stream.of("Москва").collect(Collectors.toCollection(HashSet::new));
-        Player player1 = new Player("Player #1");
-        Player player2 = new Player("Player #2");
-
-        gameHandler = new GameHandler(cities, Mockito.mock(Player.class), Mockito.mock(Player.class));
+        gameHandler = new GameHandler(cities, player1, player2);
     }
 
     @Test
@@ -67,14 +67,36 @@ class GameHandlerTest {
     }
 
     @Test
-    void startTheGame_normalGameSimulated_firstPlayerIsLoser() {
-        Mockito.when(gameHandler.getPlayer1().inputCity()).then((invocationOnMock) -> {
-            Thread.sleep(15000);
-            return "";
-        });
-        Mockito.when(gameHandler.getPlayer2().inputCity()).thenReturn("Архангельск");
+    void startTheGame_correctAnswerIsGivenBeyondAvailableTime_secondPlayerIsLoser() {
+        GameHandler spyOnGameHandler = Mockito.spy(gameHandler);
+        Player player1 = spyOnGameHandler.getPlayer1();
+        Player player2 = spyOnGameHandler.getPlayer2();
 
-        assertThrows(RuntimeException.class, () -> gameHandler.startTheGame());
-        Mockito.verify(gameHandler).announceLoser(gameHandler.getPlayer2());
+        Mockito.doReturn("Москва").when(player1).inputCity();
+        Mockito.doAnswer(invocationOnMock -> {
+            Thread.sleep(20000);
+            return "Архангельск";
+        }).when(player2).inputCity();
+
+        spyOnGameHandler.startTheGame();
+        Mockito.verify(spyOnGameHandler).announceLoser(player2);
+    }
+
+    @Test
+    void startTheGame_correctAnswerIsNotGivenAtAll_firstPlayerIsLoser() {
+        GameHandler spyOnGameHandler = Mockito.spy(gameHandler);
+        Player player1 = spyOnGameHandler.getPlayer1();
+        Player player2 = spyOnGameHandler.getPlayer2();
+
+        Mockito.doAnswer(invocationOnMock -> {
+            Thread.sleep(5000);
+            return "Москва";
+        }).when(player1).inputCity();
+
+        Mockito.doReturn("Архангельск").when(player2).inputCity();
+        //Mockito.doNothing().when(spyOnGameHandler).announceLoser(Mockito.any(Player.class));
+
+        spyOnGameHandler.startTheGame();
+        Mockito.verify(spyOnGameHandler).announceLoser(player1);
     }
 }
